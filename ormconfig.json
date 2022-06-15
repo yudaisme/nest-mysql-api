@@ -1,0 +1,11 @@
+{
+    "type": "mysql",
+    "host": "localhost",
+    "port": "3306",
+    "username": "root",
+    "password": "",
+    "database": "nestjs_mysql_crud_app",
+    "synchronize": true,
+    "logging": true,
+    "entities": ["src//*.entity.ts", "dist//*entity.ts"]
+}
