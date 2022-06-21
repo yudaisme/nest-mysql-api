@@ -16,49 +16,26 @@ export class BlogsController {
 	constructor(private blogsService: BlogsService) {}
 	@Get()
 	async showAllBlogs() {
-		const blogs = await this.blogsService.showAll();
-		return {
-			statusCode: HttpStatus.OK,
-			message: 'Blogs fetched successfully',
-			blogs
-		}
+		return await this.blogsService.showAll();
 	}
 
 	@Post()
   	async createBlogs(@Body() data: BlogsDTO) {
-    	const blog = await this.blogsService.create(data);
-    	return {
-	      statusCode: HttpStatus.OK,
-	      message: 'Blog created successfully',
-	      blog,
-    	};
+    	return await this.blogsService.create(data);
   	}
 
   	@Get(':id')
   	async readBlog(@Param('id') id: number) {
-	    const data =  await this.blogsService.read(id);
-	    return {
-	      	statusCode: HttpStatus.OK,
-	      	message: 'Blog fetched successfully',
-	      	data,
-	    };
+	    return await this.blogsService.read(id);
   	}
 
   	@Patch(':id')
   	async updateBlog(@Param('id') id: number, @Body() data: Partial<BlogsDTO>) {
-	    await this.blogsService.update(id, data);
-	    return {
-	      	statusCode: HttpStatus.OK,
-	      	message: 'Blog updated successfully',
-	    };
+	    return await this.blogsService.update(id, data);	    
   	}
 
   	@Delete(':id')
   	async deleteBlog(@Param('id') id: number) {
-	    await this.blogsService.destroy(id);
-	    return {
-	      	statusCode: HttpStatus.OK,
-	      	message: 'Blog deleted successfully',
-	    };
+	    return await this.blogsService.destroy(id);
   	}
 }

@@ -13,13 +13,22 @@ export class UsersService {
   ) {}
 
   async showAll() {
-    return await this.usersRepository.find();
+    const users = await this.usersRepository.find();
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Users fetched successfully',
+      users,
+    };
   }
 
   async create(data: UsersDTO) {
     const user = this.usersRepository.create(data);
     await this.usersRepository.save(data);
-    return user;
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'User created successfully',
+      user,
+    };
   }
 
   async findByEmail(email: string): Promise<UsersDTO> {
@@ -31,20 +40,33 @@ export class UsersService {
   }
 
   async read(id: number) {
-    return await this.usersRepository.findOne({ where: { id: id } });
+    const user = await this.usersRepository.findOne({ where: { id: id } });
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'User fetched successfully',
+      user,
+    };
   }
 
   async update(id: number, data: Partial<UsersDTO>) {
     await this.usersRepository.update({ id }, data);
-    return await this.usersRepository.findOne({
+    const user = await this.usersRepository.findOne({
       where: {
         id: id,
       },
     });
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'User updated successfully',
+      user
+    };
   }
 
   async destroy(id: number) {
     await this.usersRepository.delete({ id });
-    return { deleted: true };
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'User deleted successfully',
+    };
   }
 }

@@ -12,30 +12,52 @@ export class BlogsService {
 	) {}
 
 	async showAll() {
-		return await this.blogsRepository.find();
+		const blogs = await this.blogsRepository.find();
+
+		return {
+			statusCode: HttpStatus.OK,
+			message: 'Blogs fetched successfully',
+			blogs
+		}
 	}
 
 	async create(data: BlogsDTO) {
-	    const user = this.blogsRepository.create(data);
-	    await this.blogsRepository.save(data);
-	    return user;
+	    const blog = this.blogsRepository.create(data);
+	    return {
+	      statusCode: HttpStatus.OK,
+	      message: 'Blog created successfully',
+	      blog,
+    	};
 	}
 
 	async read(id: number) {
-	    return await this.blogsRepository.findOne({ where: { id: id } });
+	    const data = await this.blogsRepository.findOne({ where: { id: id } });
+	    return {
+	      	statusCode: HttpStatus.OK,
+	      	message: 'Blog fetched successfully',
+	      	data,
+	    };
 	}
 
 	async update(id: number, data: Partial<BlogsDTO>) {
 	    await this.blogsRepository.update({ id }, data);
-	    return await this.blogsRepository.findOne({
+	    const blog = await this.blogsRepository.findOne({
 	      	where: {
 	        	id: id,
 	      	},
 	    });
+	    return {
+	      	statusCode: HttpStatus.OK,
+	      	message: 'Blog updated successfully',
+	      	blog
+	    };
 	}
 
 	async destroy(id: number) {
 	    await this.blogsRepository.delete({ id });
-	    return { deleted: true };
+	    return {
+	      	statusCode: HttpStatus.OK,
+	      	message: 'Blog deleted successfully',
+	    };
 	}
 }

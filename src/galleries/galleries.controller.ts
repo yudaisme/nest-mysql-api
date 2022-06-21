@@ -23,60 +23,58 @@ export class GalleriesController {
 	constructor(private galleriesService: GalleriesService) {}
 	@Get()
 	async showAllGalleries() {
-		const galleries = await this.galleriesService.showAll();
-		return {
-			statusCode: HttpStatus.OK,
-			message: 'galleries fetched successfully',
-			galleries
-		}
+		return await this.galleriesService.showAll();
 	}
 
 	@Post('upload')
-	@UseInterceptors(FileInterceptor('file', {
-        storage: diskStorage({
-          	destination: './files', 
-          	filename: (req, file, cb) => {
-          	const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
-          	return cb(null, `${randomName}${extname(file.originalname)}`)
-        }
-        })
-      }))
+	@UseInterceptors(
+		FileInterceptor(
+			'file', 
+			{
+        		storage: diskStorage({
+          			destination: './files', 
+	          		filename: (req, file, cb) => {
+	          			const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
+	          			return cb(null, `${randomName}${extname(file.originalname)}`)
+	        		}
+        		})
+    		}
+    	)
+	)
   	async createGalleries(@UploadedFile() file, @Body() data: GalleriesDTO, @Req() req) {
     	data.filename = file.filename;
     	data.title = req.body.title;
-    	const gallery = await this.galleriesService.create(data);
-    	return {
-	      statusCode: HttpStatus.OK,
-	      message: 'gallery created successfully',
-	      gallery,
-    	};
+    	return await this.galleriesService.create(data);
   	}
 
   	@Get(':id')
   	async readGallery(@Param('id') id: number) {
-	    const data =  await this.galleriesService.read(id);
-	    return {
-	      	statusCode: HttpStatus.OK,
-	      	message: 'Gallery fetched successfully',
-	      	data,
-	    };
+	    return await this.galleriesService.read(id);
   	}
 
-  	@Patch(':id')
-  	async updateGallery(@Param('id') id: number, @Body() data: Partial<GalleriesDTO>) {
-	    await this.galleriesService.update(id, data);
-	    return {
-	      	statusCode: HttpStatus.OK,
-	      	message: 'Gallery updated successfully',
-	    };
+  	@Patch('upload/:id')
+  	@UseInterceptors(
+		FileInterceptor(
+			'file', 
+			{
+        		storage: diskStorage({
+          			destination: './files', 
+	          		filename: (req, file, cb) => {
+	          			const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
+	          			return cb(null, `${randomName}${extname(file.originalname)}`)
+	        		}
+        		})
+    		}
+    	)
+	)
+  	async updateGallery(@UploadedFile() file, @Param('id') id: number, @Body() data: Partial<GalleriesDTO>, @Req() req) {
+  		data.filename = file.filename
+  		data.title = req.body.title
+	    return await this.galleriesService.update(id, data);
   	}
 
   	@Delete(':id')
   	async deleteGallery(@Param('id') id: number) {
-	    await this.galleriesService.destroy(id);
-	    return {
-	      	statusCode: HttpStatus.OK,
-	      	message: 'Gallery deleted successfully',
-	    };
+	    return await this.galleriesService.destroy(id);
   	}
 }
