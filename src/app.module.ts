@@ -12,6 +12,8 @@ import { GalleriesEntity } from './galleries/galleries.entity';
 import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AuthenticationService } from './authentication/authentication.service';
+import { AuthenticationModule } from './authentication/authentication.module';
 
 @Module({
   imports: [
@@ -32,9 +34,16 @@ import { join } from 'path';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'files'),
     }),
+    // ConfigModule.forRoot({
+    //   validationSchema: Joi.object({
+    //     JWT_SECRET: Joi.string().required(),
+    //     JWT_EXPIRATION_TIME: Joi.string().required(),
+    //   })
+    // })
     UsersModule,
     BlogsModule,
     GalleriesModule,
+    AuthenticationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

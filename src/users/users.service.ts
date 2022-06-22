@@ -1,9 +1,10 @@
-import { Injectable, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { UsersEntity } from './users.entity';
 import { UsersDTO } from './users.dto';
+import { CreateUserDto } from './dto/createUser.dto';
 
 @Injectable()
 export class UsersService {
@@ -21,7 +22,7 @@ export class UsersService {
     };
   }
 
-  async create(data: UsersDTO) {
+  async create(data: CreateUserDto) {
     const user = this.usersRepository.create(data);
     await this.usersRepository.save(data);
     return {
@@ -68,5 +69,32 @@ export class UsersService {
       statusCode: HttpStatus.OK,
       message: 'User deleted successfully',
     };
+  }
+
+  async getByEmail(email: string) {
+    const user = await this.usersRepository.findOne({
+      where: {
+        email: email
+      }
+    });
+
+    if(user) {
+      return user;
+    }
+    throw new HttpException('User with that email does not exists', HttpStatus.NOT_FOUND);
+  }
+
+  async getById(id: number) {
+    const user = await this.usersRepository.findOne({
+      where: {
+        id: id
+      }
+    });
+
+    if(user){
+      return user;
+    }
+
+    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 }

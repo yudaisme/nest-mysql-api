@@ -7,9 +7,11 @@ import {
   	Body,
   	Param,
   	HttpStatus,
+  	UseGuards,
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { BlogsDTO } from './blogs.dto';
+import JwtAuthenticationGuard from '../authentication/jwt-authentication.guard';
 
 @Controller('blogs')
 export class BlogsController {
@@ -20,6 +22,7 @@ export class BlogsController {
 	}
 
 	@Post()
+	@UseGuards(JwtAuthenticationGuard)
   	async createBlogs(@Body() data: BlogsDTO) {
     	return await this.blogsService.create(data);
   	}
