@@ -14,7 +14,6 @@ export class AuthenticationController {
     private readonly authenticationService: AuthenticationService,
     private readonly usersService: UsersService
   ) {}
- 
   @Post('register')
   async register(@Body() registrationData: RegisterDto) {
     return this.authenticationService.register(registrationData);
