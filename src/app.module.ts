@@ -14,6 +14,9 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthenticationService } from './authentication/authentication.service';
 import { AuthenticationModule } from './authentication/authentication.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
+import * as Joi from '@hapi/joi';
 
 @Module({
   imports: [
@@ -34,12 +37,14 @@ import { AuthenticationModule } from './authentication/authentication.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'files'),
     }),
-    // ConfigModule.forRoot({
-    //   validationSchema: Joi.object({
-    //     JWT_SECRET: Joi.string().required(),
-    //     JWT_EXPIRATION_TIME: Joi.string().required(),
-    //   })
-    // })
+    ConfigModule.forRoot({
+      validationSchema: Joi.object({
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRATION_TIME: Joi.string().required(),
+        JWT_REFRESH_TOKEN_SECRET: Joi.string().required(),
+        JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().required(),
+      })
+    }),
     UsersModule,
     BlogsModule,
     GalleriesModule,
