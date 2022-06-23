@@ -21,7 +21,11 @@ export class AuthenticationService {
 	        ...registrationData,
 	        password: hashedPassword
 	      });
-	      return createdUser;
+	      return {
+	      	statusCode: HttpStatus.OK,
+	      	message: 'Register successfully',
+	      	createdUser
+	      }
 	    } catch (error) {
 	      throw new HttpException('Something went wrong', HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
@@ -40,7 +44,10 @@ export class AuthenticationService {
 	public getCookieWithJwtToken(userId: number) {
 	    const payload: TokenPayload = { userId };
 	    const token = this.jwtService.sign(payload);
-	    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`;
+	    return {
+	    	cookie: `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`,
+	    	token: token
+	    };
 	}
 
 	public getCookieForLogOut() {
