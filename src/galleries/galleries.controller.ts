@@ -10,6 +10,7 @@ import {
   	UploadedFile,
   	UseInterceptors,
   	Req,
+  	UseGuards
 } from '@nestjs/common';
 import { GalleriesService } from './galleries.service';
 import { GalleriesDTO } from './galleries.dto';
@@ -17,6 +18,7 @@ import { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from  'path';
+import JwtAuthenticationGuard from '../authentication/jwt-authentication.guard';
 
 @Controller('galleries')
 export class GalleriesController {
@@ -27,6 +29,7 @@ export class GalleriesController {
 	}
 
 	@Post('upload')
+	@UseGuards(JwtAuthenticationGuard)
 	@UseInterceptors(
 		FileInterceptor(
 			'file', 
@@ -53,6 +56,7 @@ export class GalleriesController {
   	}
 
   	@Patch('upload/:id')
+  	@UseGuards(JwtAuthenticationGuard)
   	@UseInterceptors(
 		FileInterceptor(
 			'file', 
@@ -74,6 +78,7 @@ export class GalleriesController {
   	}
 
   	@Delete(':id')
+  	@UseGuards(JwtAuthenticationGuard)
   	async deleteGallery(@Param('id') id: number) {
 	    return await this.galleriesService.destroy(id);
   	}

@@ -1,5 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, OneToMany  } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { BlogsEntity } from '../blogs/blogs.entity';
+
 @Entity('users')
 export class UsersEntity {
   @PrimaryGeneratedColumn()
@@ -19,4 +21,7 @@ export class UsersEntity {
   })
   @Exclude()
   public currentHashedRefreshToken: string;
+
+  @OneToMany(() => BlogsEntity, (blog: BlogsEntity) => blog.user)
+  public blogs: BlogsEntity[];
 }

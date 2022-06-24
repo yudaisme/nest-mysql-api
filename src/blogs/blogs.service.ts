@@ -2,7 +2,9 @@ import { Injectable, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BlogsEntity } from './blogs.entity';
+import { UsersEntity } from '../users/users.entity';
 import { BlogsDTO } from './blogs.dto';
+import { CreateBlogDTO } from './dto/createBlog.dto';
 
 @Injectable()
 export class BlogsService {
@@ -12,7 +14,11 @@ export class BlogsService {
 	) {}
 
 	async showAll() {
-		const blogs = await this.blogsRepository.find();
+		const blogs = await this.blogsRepository.find({
+			relations: {
+				user: true
+			}
+		});
 
 		return {
 			statusCode: HttpStatus.OK,
@@ -21,8 +27,12 @@ export class BlogsService {
 		}
 	}
 
-	async create(data: BlogsDTO) {
-	    const blog = this.blogsRepository.create(data);
+	async create(data: CreateBlogDTO, user: UsersEntity) {
+	    const blog = this.blogsRepository.create({
+	    	...data,
+	    	user: user
+	    });
+	    await this.blogsRepository.save(blog);
 	    return {
 	      statusCode: HttpStatus.OK,
 	      message: 'Blog created successfully',

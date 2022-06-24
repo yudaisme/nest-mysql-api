@@ -1,6 +1,6 @@
-export interface BlogsDTO {
+export interface CreateBlogDTO {
   id: number;
   title: string;
   content: string;
-  userId: number;
+  userId: string;
 }

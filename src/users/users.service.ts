@@ -15,7 +15,11 @@ export class UsersService {
   ) {}
 
   async showAll() {
-    const users = await this.usersRepository.find();
+    const users = await this.usersRepository.find({
+      relations: {
+        blogs: true
+      }
+    });
     return {
       statusCode: HttpStatus.OK,
       message: 'Users fetched successfully',

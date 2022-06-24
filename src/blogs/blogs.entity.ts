@@ -1,5 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
-import * as crypto from 'crypto';
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, ManyToOne, JoinColumn } from 'typeorm';
+import { UsersEntity } from '../users/users.entity';
+
+
 @Entity('blogs')
 export class BlogsEntity {
   @PrimaryGeneratedColumn()
@@ -10,4 +12,7 @@ export class BlogsEntity {
 
   @Column()
   content: string;
+
+  @ManyToOne(() => UsersEntity, (user: UsersEntity) => user.blogs)
+  public user: UsersEntity;
 }

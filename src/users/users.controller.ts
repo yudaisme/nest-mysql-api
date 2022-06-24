@@ -7,9 +7,11 @@ import {
   Body,
   Param,
   HttpStatus,
+  UseGuards
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersDTO } from './users.dto';
+import JwtAuthenticationGuard from '../authentication/jwt-authentication.guard';
 
 @Controller('users')
 export class UsersController {
@@ -20,6 +22,7 @@ export class UsersController {
   }
 
   @Post()
+  @UseGuards(JwtAuthenticationGuard)
   async createUsers(@Body() data: UsersDTO) {
     return await this.usersService.create(data);
   }
@@ -30,11 +33,13 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthenticationGuard)
   async uppdateUser(@Param('id') id: number, @Body() data: Partial<UsersDTO>) {
     return await this.usersService.update(id, data);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthenticationGuard)
   async deleteUser(@Param('id') id: number) {
     return await this.usersService.destroy(id);
   }
